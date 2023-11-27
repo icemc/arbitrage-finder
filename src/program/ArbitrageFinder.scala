@@ -37,12 +37,10 @@ object ArbitrageFinder{
     for {
       data <- datasource.getExchangeData.map(_.map(edge => (edge._1, -1 * Math.log(edge._2), edge._3)))
       graph = DirectedGraph[T, Double](data:_*)
-//      cycles <- Future.sequence(graph.vertices.toList.map(vertex => Future.successful(BellmanFord(graph).findCyclesAtVertex(vertex))))
+      cycles <- Future.sequence(graph.vertices.toList.map(vertex => Future.successful(BellmanFord(graph).findCyclesAtVertex(vertex))))
       cycles <- Future.traverse(graph.vertices.toList)(vertex => Future.successful(BellmanFord(graph).findCyclesAtVertex(vertex)))
 //      cycles = BellmanFord(graph).findCycles
     } yield
-//      cycles.foldLeft(Map.empty[List[Vertex[T]], Double])((values, cycle) =>
-//        values.updated(cycle, approximateArbitrageValue(calculateArbitrage(1, 0, cycle, graph)))
       cycles.flatten.foldLeft(Map.empty[List[Vertex[T]], Double])((values, cycle) =>
       values.updated(cycle, approximateArbitrageValue(calculateArbitrage(1, 0, cycle, graph)))
     )

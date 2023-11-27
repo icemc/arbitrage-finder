@@ -146,6 +146,9 @@ final case class BellmanFord[V](graph: DirectedGraph[V, Double]):
           val currentVertex = edge.endVertex
           val (cycle, seen, vertex) = findCycle(seenAndCycle._1 + currentVertex, List(currentVertex), predecessors(currentVertex), edge)
           val newCycle = cycle.appended(vertex)
+
+          //Use DummyDataSources.ONE to see how index is useful in cutting of precycle nodes
+//          println(s"""cycle: $newCycle""")
           val index = newCycle.indexOf(vertex)
 
           (seen, seenAndCycle._2 :+ newCycle.drop(index).reverse)

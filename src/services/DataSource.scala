@@ -34,7 +34,7 @@ object DummyDataSources:
   end ONE
   
   object TWO extends DataSource[String]:
-    //Has a negative weigh cycle but will not work with Arbitrage finder due to the values of its weight
+    //Has a negative weight cycle but will not work with Arbitrage finder due to the values of its weight
     //However BellmanFord.findCycles should be able to find the negative weight cycle
     override def getExchangeData: Future[Seq[(String, Double, String)]] = Future.successful(Seq(
           ("2", 5, "4"),
