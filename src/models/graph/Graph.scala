@@ -13,12 +13,20 @@ final case class EmptyDirectedGraph[V, W] private[graph] () extends Graph[V, W](
 end EmptyDirectedGraph
 
 
-final case class DirectedGraph[V, W] private[graph] (vertexAdjacencyMap: Map[Vertex[V], List[Edge[V,W]]], vertices: Set[Vertex[V]], edges: Set[Edge[V,W]])
-  extends Graph[V, W](vertexAdjacencyMap: Map[Vertex[V], List[Edge[V,W]]], vertices: Set[Vertex[V]], edges: Set[Edge[V,W]]):
+final case class DirectedGraph[V, W] private[graph] (
+                                                      vertexAdjacencyMap: Map[Vertex[V], List[Edge[V,W]]],
+                                                      vertices: Set[Vertex[V]],
+                                                      edges: Set[Edge[V,W]]
+                                                    )
+  extends Graph[V, W](
+    vertexAdjacencyMap: Map[Vertex[V], List[Edge[V,W]]],
+    vertices: Set[Vertex[V]],
+    edges: Set[Edge[V,W]]
+  ):
   override def addEdge(startVertex: Vertex[V], weight: W, endVertex: Vertex[V]): DirectedGraph[V, W] =
     val edge = Edge(startVertex, endVertex, weight)
     val updatedValue = edge :: vertexAdjacencyMap.getOrElse(startVertex, Nil)
-    new DirectedGraph(
+    DirectedGraph(
       vertexAdjacencyMap = vertexAdjacencyMap.filterNot(_._1 == startVertex) ++ Map(startVertex -> updatedValue),
       vertices = vertices ++ Set(startVertex, endVertex),
       edges = edges + edge

@@ -139,21 +139,21 @@ final case class BellmanFord[V](graph: DirectedGraph[V, Double]):
     end findCycle
 
 
-    val cycles = graph.edges.foldLeft((Set.empty[Vertex[V]], List.empty[List[Vertex[V]]])){
-      (seenAndCycle, edge) =>
+    val cycles = graph.edges.foldLeft(List.empty[List[Vertex[V]]]){
+      (cycles, edge) =>
         if distances(edge.endVertex) > (distances(edge.startVertex) + edge.weight) then
           //Negative cycles detected. Process them if possible
           val currentVertex = edge.endVertex
-          val (cycle, seen, vertex) = findCycle(seenAndCycle._1 + currentVertex, List(currentVertex), predecessors(currentVertex), edge)
+          val (cycle, _, vertex) = findCycle(Set(currentVertex), List(currentVertex), predecessors(currentVertex), edge)
           val newCycle = cycle.appended(vertex)
 
-          //Use DummyDataSources.ONE to see how index is useful in cutting of precycle nodes
+          //Use DummyDataSources.ONE to see how index is useful in cutting off precycle nodes
 //          println(s"""cycle: $newCycle""")
           val index = newCycle.indexOf(vertex)
 
-          (seen, seenAndCycle._2 :+ newCycle.drop(index).reverse)
-        else seenAndCycle //No negative cycles return original values
-    }._2
+          cycles :+ newCycle.drop(index).reverse
+        else cycles //No negative cycles return original values
+    }
 
     (cycles, distances, predecessors)
   end findNegativeWeightCycles

@@ -18,7 +18,8 @@ final case class SwissBorgDataSource()(using val backend: SttpBackend[Future, We
 
   override def getExchangeData: Future[Seq[(String, Double, String)]] = get(API_URL).map(extractData)
 
-  private def extractData(json: String): Seq[(String, Double, String)] = 
+  private def extractData(json: String): Seq[(String, Double, String)] =
+//    println(s"Data: $json")
     val rates = circe.parser.parse(json).getOrElse(Json.Null).hcursor.downField("rates")
     val keys = rates.keys.getOrElse(Nil)
     keys.foldLeft(List.empty[(String, Double, String)]) {
