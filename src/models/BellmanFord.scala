@@ -22,12 +22,10 @@ final case class BellmanFord[V](graph: DirectedGraph[V, Double]):
    * @return
    */
   def findCycles: Cycles[V] =
-    getUniqueCycles(
       graph.vertices
         .foldLeft(
             List.empty[List[Vertex[V]]]
-        )((cycles, vertex) => cycles ++ findCyclesAtVertex(vertex))
-    )
+        )((cycles, vertex) => cycles ++ findCyclesAtVertex(vertex)).distinct
   end findCycles
 
   /**
@@ -157,10 +155,6 @@ final case class BellmanFord[V](graph: DirectedGraph[V, Double]):
 
     (cycles, distances, predecessors)
   end findNegativeWeightCycles
-
-
-  private def getUniqueCycles(cycles: Cycles[V]): Cycles[V] =
-    cycles.distinct
 
 end BellmanFord
 
