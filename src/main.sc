@@ -26,7 +26,7 @@ given globalExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(
   new java.util.concurrent.ForkJoinPool(12)
 )
 given backend: SttpBackend[Future, WebSockets] = HttpClientFutureBackend()
-given dataSource: DataSource[String] = SwissBorgDataSource()
+given dataSource: DataSource[String] = DummyDataSources.ONE
 
 val start = System.currentTimeMillis
 val result = ArbitrageFinder.find.map{result =>
