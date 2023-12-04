@@ -19,7 +19,7 @@ class ArbitrageFinderSpec extends UnitSpec {
 
     whenReady(ArbitrageFinder.find[String]) {
       cycles =>
-        cycles.size should be > (0)
+        cycles.size should be > 0
     }
   }
 
@@ -40,12 +40,12 @@ class ArbitrageFinderSpec extends UnitSpec {
       }
     }
 
-  "ArbitrageFinder printer" should "print ARBITRAGE OPPORTUNITY DETECTED when arbitrage found" in {
+  "ArbitrageFinder printer" should "print ARBITRAGE OPPORTUNITIES DETECTED when arbitrage found" in {
     given dataSource: DataSource[String] = DummyDataSources.ONE
 
     whenReady(ArbitrageFinder.find[String]) {
       cycles =>
-        cycles.print should include ("ARBITRAGE OPPORTUNITY DETECTED")
+        cycles.print should include ("ARBITRAGE OPPORTUNITIES DETECTED")
     }
   }
 }

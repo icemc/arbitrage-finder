@@ -22,15 +22,21 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 
 //Prepare dependencies
-given globalExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(
-  new java.util.concurrent.ForkJoinPool(12)
-)
+//given globalExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(
+//  new java.util.concurrent.ForkJoinPool(12)
+//)
+
+given globalExecutionContext: ExecutionContext = ExecutionContext.global
 given backend: SttpBackend[Future, WebSockets] = HttpClientFutureBackend()
-given dataSource: DataSource[String] = DummyDataSources.ONE
+given dataSource: DataSource[String] = SwissBorgDataSource()
 
 val start = System.currentTimeMillis
-val result = ArbitrageFinder.find.map{result =>
-  println(s"${result.print}\nTime: ${System.currentTimeMillis - start}ms")
-}
+
+val result = ArbitrageFinder.find
+  .map(result =>
+    println(s"${result.print}\nTime: ${System.currentTimeMillis - start}ms"))
+  .recover{
+    case e => println(s"Something went wrong: ${e.getMessage}")
+  }
 
 Await.ready(result, Duration.Inf)
