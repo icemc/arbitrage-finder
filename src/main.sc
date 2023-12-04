@@ -22,11 +22,10 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 
 //Prepare dependencies
-//given globalExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(
-//  new java.util.concurrent.ForkJoinPool(12)
-//)
+given globalExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(
+  new java.util.concurrent.ForkJoinPool(12)
+)
 
-given globalExecutionContext: ExecutionContext = ExecutionContext.global
 given backend: SttpBackend[Future, WebSockets] = HttpClientFutureBackend()
 given dataSource: DataSource[String] = SwissBorgDataSource()
 
